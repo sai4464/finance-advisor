@@ -1,3 +1,6 @@
+const { v4: uuidv4 } = require('uuid');
+
+// In-memory store
 let transactions = [];
 
 const getTransactions = (req, res) => {
@@ -5,19 +8,42 @@ const getTransactions = (req, res) => {
 };
 
 const addTransaction = (req, res) => {
-  const { title, amount, category, type, date } = req.body;
+  let { text, amount, type, category, date } = req.body;
+
+  // Convert and validate amount
+  amount = Number(amount);
+
+  if (!text || isNaN(amount) || !type || !category || !date) {
+    console.log('Invalid data received:', req.body);
+    return res.status(400).json({ error: 'Please provide all required fields' });
+  }
 
   const newTransaction = {
-    id: Date.now().toString(),
-    title,
-    amount: parseFloat(amount),
-    category,
+    id: uuidv4(),
+    text,
+    amount,
     type,
-    date,
+    category,
+    date
   };
 
-  transactions.unshift(newTransaction);
+  transactions.push(newTransaction);
   res.status(201).json(newTransaction);
 };
 
-module.exports = { getTransactions, addTransaction };
+const deleteTransaction = (req, res) => {
+  const { id } = req.params;
+  const index = transactions.findIndex((t) => t.id === id);
+  if (index === -1) {
+    return res.status(404).json({ error: 'Transaction not found' });
+  }
+  const deleted = transactions.splice(index, 1)[0];
+  res.json({ message: 'Deleted', transaction: deleted });
+};
+
+// ✅ Export all three handlers as functions
+module.exports = {
+  getTransactions,
+  addTransaction,
+  deleteTransaction
+};

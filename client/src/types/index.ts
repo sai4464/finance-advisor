@@ -1,6 +1,6 @@
 export interface Transaction {
   id: string;
-  title: string;
+  text: string; // ✅ matches backend and frontend form
   amount: number;
   category: string;
   date: string;

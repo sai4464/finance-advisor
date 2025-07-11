@@ -8,7 +8,7 @@ interface AddTransactionFormProps {
 
 const AddTransactionForm: React.FC<AddTransactionFormProps> = ({ onAddTransaction }) => {
   const [formData, setFormData] = useState({
-    title: '',
+    text: '', // ✅ renamed from title to text
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0],
@@ -17,16 +17,16 @@ const AddTransactionForm: React.FC<AddTransactionFormProps> = ({ onAddTransactio
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.title && formData.amount && formData.category) {
+    if (formData.text && formData.amount && formData.category) {
       onAddTransaction({
-        title: formData.title,
+        text: formData.text,
         amount: formData.type === 'expense' ? -Math.abs(Number(formData.amount)) : Math.abs(Number(formData.amount)),
         category: formData.category,
         date: formData.date,
         type: formData.type
       });
       setFormData({
-        title: '',
+        text: '',
         amount: '',
         category: '',
         date: new Date().toISOString().split('T')[0],
@@ -49,8 +49,8 @@ const AddTransactionForm: React.FC<AddTransactionFormProps> = ({ onAddTransactio
             <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
             <input
               type="text"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              value={formData.text}
+              onChange={(e) => setFormData({ ...formData, text: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-400 focus:scale-105"
               placeholder="Enter transaction title"
               required
